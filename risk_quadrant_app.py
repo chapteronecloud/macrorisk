@@ -13,11 +13,26 @@ st.title("宏观风险象限图分析工具")
 @st.cache_data
 def load_data():
     try:
-        df = pd.read_excel('复合指数.xlsx', sheet_name='comp')
-        df['date'] = pd.to_datetime(df['date'])
-        return df
+        # 尝试多个可能的路径
+        possible_paths = [
+            '复合指数.xlsx',
+            os.path.join(os.path.dirname(__file__), '复合指数.xlsx'),
+            '/mount/src/macrorisk/复合指数.xlsx'
+        ]
+        
+        for path in possible_paths:
+            if os.path.exists(path):
+                st.write(f"找到文件路径: {path}")
+                df = pd.read_excel(path, sheet_name='comp')
+                df['date'] = pd.to_datetime(df['date'])
+                return df
+        
+        st.error("未能找到数据文件。尝试过的路径：" + "\n".join(possible_paths))
+        return None
     except Exception as e:
-        st.error(f"无法读取数据文件：{str(e)}")
+        st.error(f"读取数据时出错：{str(e)}")
+        st.write("当前工作目录：", os.getcwd())
+        st.write("目录内容：", os.listdir())
         return None
 
 df = load_data()
