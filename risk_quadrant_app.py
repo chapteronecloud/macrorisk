@@ -12,11 +12,18 @@ st.title("宏观风险象限图分析工具")
 # 读取Excel文件
 @st.cache_data
 def load_data():
-    df = pd.read_excel(os.path.join('复合指数.xlsx'), sheet_name='comp')
-    df['date'] = pd.to_datetime(df['date'])
-    return df
+    try:
+        df = pd.read_excel('复合指数.xlsx', sheet_name='comp')
+        df['date'] = pd.to_datetime(df['date'])
+        return df
+    except Exception as e:
+        st.error(f"无法读取数据文件：{str(e)}")
+        return None
 
 df = load_data()
+
+if df is None:
+    st.stop()
 
 # 侧边栏控件
 st.sidebar.header("参数设置")
