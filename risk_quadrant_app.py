@@ -15,7 +15,7 @@ def load_data():
     try:
         # 尝试多个可能的路径
         possible_paths = [
-            '复合指数.xlsx',
+            'index.xlsx',
             os.path.join(os.path.dirname(__file__), 'index.xlsx'),
             '/mount/src/macrorisk/index.xlsx'
         ]
